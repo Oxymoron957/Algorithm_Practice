@@ -1,70 +1,76 @@
 """
-새로운 게임 2
+새로운 게임2
 https://www.acmicpc.net/problem/17837
 """
 
+deltas = [0, (0, 1), (0, -1), (-1, 0), (1, 0)]
 
-        
+def is_field(r, c): # 현재 row, col이 map 안에 있는지 확인
+    return 0 <= r < N and 0 <= c < N
 
-# N, K 입력받기 
-N, K = list(map(int, input().split()))
+N, K = map(int, input().split())
+map_color = [list(map(int, input().split())) for _ in range(N)]
+map_piece = [[[] for _ in range(N)] for _ in range(N)] 
+pieces = [] 
+playtime = 0
 
-# init Map (index order : col, row)
-gameMap = [[0]*N for _ in range(N)]
-gameMap_piece = [[]*N for _ in range(N)]
+for p in range(K): # piece의 정보를 pieces와 map_piece에 기록한다.
+    r, c, direction = map(int, input().split())
+    pieces.append([r-1, c-1, direction])
+    map_piece[r-1][c-1].append(p)
 
-# init Tile
-for height in range(N):
-    row = list(map(int, input().split(' ')))
-    for i in range(N):
-        gameMap[height][i] = row[i]
+while True:
+    toggle = False
+    for p in range(K):
+        now_r, now_c, now_direction = pieces[p] # 현재 위치정보
+        delta_r, delta_c = deltas[now_direction] 
+        next_r, next_c = now_r + delta_r, now_c + delta_c # 다음 위치정보
+        next_direction = now_direction
+        now_height = map_piece[now_r][now_c].index(p)
 
-# for i in gameMap:
-#     print(i)
-# print()
+        move_pieces = map_piece[now_r][now_c][now_height:]
 
-# init chess piece class
-class Chesspiece:
-    def __init__(self, y, x, dir):
-        self.cur_y = y
-        self.cur_x = x
-        self.direction = dir
-    
+        map_piece[now_r][now_c] = map_piece[now_r][now_c][:now_height]
 
+        if not is_field(next_r, next_c) or map_color[next_r][next_c] == 2: # 파란색 타일일 때
+            if next_direction == 1:
+                next_direction = 2
+            elif next_direction == 2:
+                next_direction = 1
+            elif next_direction == 3:
+                next_direction = 4
+            elif next_direction == 4:
+                next_direction = 3
 
-# init chess piece info 
-pieces = []
-for p in range(K):
-    pieceInfo = list(map(int, input().split(' ')))
-    pieces.append(Chesspiece(pieceInfo[1], pieceInfo[0], pieceInfo[2]))
+            delta_r, delta_c = deltas[next_direction]
+            pieces[p][2] = next_direction
+            next_r, next_c = now_r + delta_r, now_c + delta_c
 
-turn = 0
-isNotDone = True
-while isNotDone:
-    for p in pieces:
-        next_coord_x, next_coord_y = 0, 0
-        # check direction
-        if p.direction == 1:
-            next_coord_y, next_coord_x = [p.cur_y, p.cur_x+1]
-        elif p.direction == 2:
-            next_coord_y, next_coord_x = [p.cur_y, p.cur_x-1]
-        elif p.direction == 3:
-            next_coord_y, next_coord_x = [p.cur_y+1, p.cur_x]
-        elif p.direction == 4:
-            next_coord_y, next_coord_x = [p.cur_y-1, p.cur_x]
-        # check next tile
-        if not (0<= next_coord_x <=N and 0<= next_coord_x <=N):
-            pass
-        next_tile = gameMap[next_coord_y, next_coord_x]
+            if not is_field(next_r, next_c) or map_color[next_r][next_c] == 2: # 다음 타일도 파랑색이거나 바깥일 때 (움직이지 않는다.)
+                next_r, next_c = now_r, now_c
 
-        if next_tile == 1:
-            p.cur_y, p.cur_x = next_coord_y, next_coord_x
-            
+            elif map_color[next_r][next_c] == 1: # 다음 타일이 빨간색일 때 (뒤집는다)
+                move_pieces.reverse()
 
-    for row in gameMap_piece:
-        for pList in row:
-            if len(pList) >= 4:
-                isNotDone = False
+        elif map_color[next_r][next_c] == 1: # 빨간색 타일일때 (뒤집는다)
+            move_pieces.reverse()
 
-print(turn)
+        for move_piece in move_pieces:
+            pieces[move_piece][0], pieces[move_piece][1] = next_r, next_c # 움직이는 모든 piece의 위치정보 갱신
 
+        map_piece[next_r][next_c] += move_pieces # 해당 위치에 더한다. 
+
+        if len(map_piece[next_r][next_c]) >= 4: # 탈출 조건 
+            toggle = True
+            break
+
+    playtime += 1
+
+    if toggle:
+        break
+
+    if playtime > 1000:
+        playtime = -1
+        break
+
+print(playtime)
