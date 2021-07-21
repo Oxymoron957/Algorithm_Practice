@@ -8,7 +8,6 @@ https://www.acmicpc.net/problem/11066
 1
 15
 1 21 3 4 5 35 5 4 3 5 98 21 14 17 32
-
 """
 
 import sys
