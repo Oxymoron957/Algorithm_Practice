@@ -2,7 +2,6 @@
 인구 이동
 https://www.acmicpc.net/problem/16234
 """
-import copy
 
 N, L, R = map(int, input().split())
 land = []
