@@ -20,7 +20,7 @@ def solution(board):
             answer.append(cost)
         
         # move right / left / up / down 
-        if row+1 <= map_size and board[col][row+1] == 0:
+        if row  +1 <= map_size and board[col][row+1] == 0:
             dq.append([col, row+1, cost + 100 if lastDir == 'right' or lastDir == '' else cost + 600, 'right'])
         if row-1 >= 0 and board[col][row-1] == 0:
             dq.append([col, row-1, cost + 100 if lastDir == 'left' or lastDir == '' else cost + 600, 'left'])

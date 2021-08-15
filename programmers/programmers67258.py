@@ -1,51 +1,44 @@
 """
-보석 쇼핑
+보석 쇼핑 20210810
 https://programmers.co.kr/learn/courses/30/lessons/67258
+
+※ 부족했던 부분
+    딕셔너리의 key:value를 활용하는 스킬이 부족했던 것 같다.
+    이번 문제처럼 각 element의 갯수를 최적화하는 문제에서 element의 갯수를 value로 보관하여 증가 및 감소시켜 최적해를 구할 수 있다. 
 """
 
-from collections import deque
-
-def check(gem, dq):
-    index_ = 0
-    print(gem, dq)
-    if dq[0] == gem:
-        dq.popleft()
-        index_ += 1
-        while len(dq)>=2 and dq[0] == dq[1]:
-            dq.popleft()
-            index_ += 1
-    return index_
-            
 def solution(gems):
-    # gem의 종류를 파악한다. 
-    gemSet = set(gems)
-
-    # index 설정
-    startIdx = 1
-    endIdx = 1
-
-    # 
+    numOfGems = len(set(gems))
     answer = []
-
-    # Index 1부터 탐색 시작한다. 
-    dq = deque()
-    dq.append(gems[0])
-    for g in gems[1:]:
-        if set(dq) == gemSet:
-            if not answer:
-                answer = [startIdx, endIdx]
-            elif answer[1] - answer[0] > endIdx - startIdx:
-                answer = [startIdx, endIdx]
-
-        startIdx += check(g, dq)
-        dq.append(g)
-        endIdx += 1 
-        
-        
-    return answer
+    start, end = 0, 0
+    gemDict = {gems[0]: 1}
+    while start < len(gems) and end < len(gems):
+        # print(gemDict)
+        # 모든 종류의 보석을 가지고 있을 경우 -> start를 늘려가며 최소 구간을 구한다.
+        if len(gemDict) == numOfGems:
+            answer.append([start, end, end-start])
+            # start의 보석의 갯수가 1개일 경우 0으로 줄어듦으로 삭제한다. (중요)
+            if gemDict[gems[start]] == 1:
+                del gemDict[gems[start]]
+            else:
+                gemDict[gems[start]] -= 1
+            start += 1
+            
+        # 모든 종류의 보석을 가지고 있지 않을 경우 -> end를 늘려가며 보석의 갯수를 늘린다.
+        else:
+            end+=1
+            if end == len(gems):
+                break
+            if gemDict.get(gems[end]) is None:
+                gemDict[gems[end]] = 1
+            else:      
+                gemDict[gems[end]] += 1 
+    answer.sort(key=lambda x:x[2])
+    return answer[0][0]+1, answer[0][1]+1
             
 
 print(solution(["DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA"]))
 print(solution(["AA", "AB", "AC", "AA", "AC"]))
 print(solution(["XYZ", "XYZ", "XYZ"]))
 print(solution(["ZZZ", "YYY", "NNNN", "YYY", "BBB"]))
+print(solution(["RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "RUBY", "DIA", "EMERALD", "SAPPHIRE"]))

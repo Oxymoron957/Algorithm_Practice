@@ -4,27 +4,35 @@ https://www.acmicpc.net/problem/1725
 """
 
 import sys
+from collections import deque
 
-N = int(sys.stdin.readline())
-# histogram = list(map(int, input().split()))
-h = []
-for _ in range(N):
-    h.append(int(sys.stdin.readline()))
+# input
+SIZE = int(sys.stdin.readline())
+HISTO = []
+for _ in range(SIZE):
+    HISTO.append(int(sys.stdin.readline()))
+HISTO.append(0)
+SIZE+=1
 
-# 이중 list 만들기 
-# 
+# variables
+st = deque()
+answer = -1
+curIdx = 1
 
-answer = []
-for hval in h:
-    # if not answer:
-    #     answer.append([1])
-    answer.append([hval])
+while curIdx <= SIZE-1:
+    if not st:
+        st.append(curIdx)
+        continue
 
-    for i, ival in enumerate(answer):
-        if ival[-1] == -1:
-            continue
-        if ival[0] > hval:
-            ival.append(-1)
-        else:
-            ival.append(ival[-1]+ival[0])
+    while HISTO[st[-1]] > HISTO[curIdx]:
+        idx = st.pop()
+        if len(st) == 0:
+            answer = max((curIdx)*HISTO[idx], answer)
+            break    
+        answer = max((curIdx - st[-1] - 1)*HISTO[idx], answer)
+
+    st.append(curIdx)
+    curIdx+=1
+
 print(answer)
+
