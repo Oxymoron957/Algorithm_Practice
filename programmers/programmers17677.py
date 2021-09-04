@@ -1,7 +1,19 @@
 """
 뉴스 클러스터링
 https://programmers.co.kr/learn/courses/30/lessons/17677
+
+※ 부족했던 점
+파이썬 collections 라이브러리의 Counter 클래스에 대해서 알지 못했다. 
+
+Counter 클래스 : 
+    1. 데이터의 갯수를 셀 때 유용하다. -> Container 안의 element의 갯수를 가지고 있는 자료구조를 만들 수 있다.
+    2. set 자료형처럼 집합 연산이 가능하다. 
+        - 교집합 : 서로 가지고 있는 element와 해당 element의 갯수 중 작은 수를 저장
+        - 합집합 : 모든 element와 해당 element의 갯수 중 큰 수를 저장
+
 """
+
+from collections import Counter
 
 def createToken(str):
     strList = []
@@ -11,43 +23,27 @@ def createToken(str):
             strList.append(token)
     return strList
 
-def getElementNum(strList):
-    strDict = {}
-    for token in strList:
-        if strDict.get(token) is None:
-             strDict[token] = 1
-        else:
-            strDict[token] += 1
-    return strDict
-
 def solution(str1, str2):
     # 두 글자씩 나누어 element 생성하기 
     str1List = createToken(str1)
     str2List = createToken(str2)
-    
-    # 각 element의 갯수 구하기 
-    str1Dict = getElementNum(str1List)
-    str2Dict = getElementNum(str2List)
 
-    # 교집합 element 구하기
-    interElement = list(set(str1List) & set(str2List))
-    unionElement = list(set(str1List) | set(str2List))
+    # 각 문자열의 Counter 객체 생성 
+    str1Counter = Counter(str1List)
+    str2Counter = Counter(str2List)
     
-    # 중복된 element의 갯수 구하기
-    minVal = []
-    maxVal = []
-    for i in list(interElement):
-        minVal += (min(str1Dict[i], str2Dict[i])-1) * [i]
-        maxVal += (max(str1Dict[i], str2Dict[i])-1) * [i]
+    # 합집합과 교집합 생성 
+    intersection = list((str1Counter & str2Counter).elements())
+    union = list((str1Counter | str2Counter).elements())
 
-    print(interElement, unionElement)
-    print(minVal, maxVal)
-    if len(unionElement) == 0:
+    # 자카드 유사도 계산 및 반환
+    if len(union) == 0 and len(intersection) == 0:
         return 65536
-    elif len(interElement) == 0:
-        return 0
     else:
-        return int(((len(interElement+minVal))/(len(unionElement+maxVal)))*65536)
+        return int(len(intersection) / len(union) * 65536)
+    
+
+
 
 
 print(solution("FRANCE","french"))
