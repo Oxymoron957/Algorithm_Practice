@@ -30,12 +30,12 @@ while key_ < N+1:
     stack.append(key_)
     while stack:
         cur_key = stack.pop()
+        print(answer, cur_key)
         
         if len(info[cur_key][0]) == 0:
             continue
 
         for i in list(info[cur_key][0]):
-            print(answer, i)
             if i not in answer[key_][0]:
                 answer[key_][0].add(i)
                 stack.append(i)
