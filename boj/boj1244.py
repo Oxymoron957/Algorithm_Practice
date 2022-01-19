@@ -24,4 +24,3 @@ for _ in range(students):
 			switch_stat[number-scope-1] = 1 if switch_stat[number-scope-1] == 0 else 0
 			scope += 1
 print(" ".join(map(str, switch_stat)))
-		
