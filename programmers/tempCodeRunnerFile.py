@@ -1,2 +1,2 @@
-p)
-	print(orders)
+ions[:i]) >= i:
+		# 	return i
