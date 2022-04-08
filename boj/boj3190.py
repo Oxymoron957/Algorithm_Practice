@@ -4,6 +4,111 @@ https://www.acmicpc.net/problem/3190
 """
 
 N = int(input())
+apples = int(input())
+maps = [[0]*N for _ in range(N)]
+
+for _ in range(apples):
+    row, col = map(int, input().split())
+    maps[row-1][col-1] = 1
+
+for _ in maps:
+    print(_)
+
+L = int(input())
+scenario = []
+for _ in range(L):
+    t, d = input().split()
+    t = int(t)
+    scenario.append([t, d])
+
+print(scenario)
+
+time = 0
+move_log = [[0,0]]
+snake_len = 1
+cur_loc = [0, 0]
+cur_dir = [0, 1]
+
+test = 22
+while test:
+    test -= 1
+
+    print(cur_loc, cur_dir, scenario)
+    time += 1
+    cur_loc[0] += cur_dir[0]
+    cur_loc[1] += cur_dir[1]
+    move_log.append([cur_loc[0], cur_loc[1]])
+    print(time, cur_loc, move_log[1:snake_len])
+    if cur_loc in move_log[1:snake_len]:
+        print("Lost\n")
+        break
+    if not (0 <= cur_loc[0] < N):
+        print("mapout")
+        break
+    if not (0 <= cur_loc[1] < N):
+        print("mapout")
+        break
+    if scenario and scenario[0][0] == time:
+        if cur_dir[0] == -1 and cur_dir[1] == 0 and scenario[0][1] == 'L':
+            cur_dir = [0, -1]
+        elif cur_dir[0] == -1 and cur_dir[1] == 0 and scenario[0][1] == 'D':
+            print("-10")
+            cur_dir = [0, 1]
+
+        elif cur_dir[0] == 1 and cur_dir[1] == 0 and scenario[0][1] == 'L':
+            cur_dir = [0, 1]
+        elif cur_dir[0] == 1 and cur_dir[1] == 0 and scenario[0][1] == 'D':
+            print("10")
+            cur_dir = [0, -1]
+        
+        elif cur_dir[0] == 0 and cur_dir[1] == -1 and scenario[0][1] == 'L':
+            cur_dir = [1, 0]
+        elif cur_dir[0] == 0 and cur_dir[1] == -1 and scenario[0][1] == 'D':
+            print("0-1")
+            cur_dir = [-1, 0]
+        
+        elif cur_dir[0] == 0 and cur_dir[1] == 1 and scenario[0][1] == 'L':
+            cur_dir = [-1, 0]
+        elif cur_dir[0] == 0 and cur_dir[1] == 1 and scenario[0][1] == 'D':
+            print("01")
+            cur_dir = [1, 0]
+        snake_len += 1
+        scenario.pop(0)
+    # if not scenario:
+    #     print("complete\n")
+    #     break
+print(time)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+N = int(input())
 K = int(input())
 
 # Map Generation 
@@ -102,4 +207,4 @@ while True:
     #print()
 
     time += 1
-
+"""

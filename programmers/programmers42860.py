@@ -36,4 +36,3 @@ def solution(name):
 print(solution('JAZ'))
 print(solution('JEROEN'))
 print(solution('AAABAAAAAB'))
-
