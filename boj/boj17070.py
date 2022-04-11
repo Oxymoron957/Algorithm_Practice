@@ -6,7 +6,6 @@ https://www.acmicpc.net/problem/17070
 
 from collections import deque
 import sys
-
 input = sys.stdin.readline
 
 N = int(input())
